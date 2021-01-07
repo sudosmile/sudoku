@@ -99,7 +99,7 @@ void test()
     printoku(test_map);
 }
 
-int main(int arc, char *arv[])//will take user input and make a board
+int main(int arc, char *arv[])
 {
     test();
     return 0;

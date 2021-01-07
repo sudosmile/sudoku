@@ -6,7 +6,9 @@ typedef struct coords {
     int none;
 }coord;
 
-int test_map[9][9] = {
+typedef int map[9][9];
+
+map test_map = {
     {0,0,0,0,3,0,0,4,2},
     {8,0,0,0,2,0,0,0,3},
     {0,7,0,9,0,0,5,8,0},
@@ -18,12 +20,12 @@ int test_map[9][9] = {
     {3,2,0,0,9,0,0,0,0},
 };
 
-coord find_empty(int map[9][9])
+coord find_empty_cell(map local)
 {
     coord out;
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
-            if (map[i][j] == 0) {
+            if (local[i][j] == 0) {
                 out.x = i;
                 out.y = j;
                 out.none = 0;
@@ -35,46 +37,46 @@ coord find_empty(int map[9][9])
     return out;
 }
 
-int valid(int map[9][9], coord pos, int num) //checks if move valid
+int is_move_valid(map local, coord pos, int num) //checks if move valid
 {
     int i, j, box_x, box_y;
     for (i = 0; i < 9; i++) {
-        if (map[pos.x][i] == num && pos.y != i)
+        if (local[pos.x][i] == num && pos.y != i)
             return 0;
     }
     for (i = 0; i < 9; i++) {
-        if (map[i][pos.y] == num && pos.y != i)
+        if (local[i][pos.y] == num && pos.y != i)
             return 0;
     }
     box_x = pos.x/3;
     box_y = pos.y/3;
     for (i = (box_y*3); i < (box_x * 3 + 3); i++) {
         for (j = (box_x*3); j < (box_y * 3 + 3); j++) {
-            if (map[i][j] == num && (i != pos.x || j != pos.y))
+            if (local[i][j] == num && (i != pos.x || j != pos.y))
                 return 0;
         }
     }
     return 1;
 }
 
-int solve(int map[9][9])
+int solve_all(map local)
 {
-    coord found = find_empty(map);
+    coord found = find_empty_cell(local);
     int i;
     if (!(found.none != 1))
         return 1;
     for (i=1; i < 10; i++) {
-        if (valid(map, found, i)) {
-            map[found.x][found.y] = i;
-            if (solve(map))
+        if (is_move_valid(local, found, i)) {
+            local[found.x][found.y] = i;
+            if (solve_all(local))
                 return 1;
-            map[found.x][found.y] = 0;
+            local[found.x][found.y] = 0;
         }
     }
     return 0;
 }
 
-void printoku(int map[9][9])
+void printoku(map local)
 {
     int i, j;
     for (i = 0; i < 9; i++) {
@@ -83,7 +85,7 @@ void printoku(int map[9][9])
         for (j = 0; j < 9; j++) {
             if (j % 3 == 0)
                 printf("|");
-            printf("%i ", map[i][j]);
+            printf("%i ", local[i][j]);
         }
         printf("\n");
     }
@@ -94,7 +96,7 @@ void test()
 {
     printf("original:\n");
     printoku(test_map);
-    solve(test_map);
+    solve_all(test_map);
     printf("solved:\n");
     printoku(test_map);
 }

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-typedef struct coords {
+typedef struct coord {
     int x;
     int y;
     int none;
@@ -69,14 +69,17 @@ void printoku(map local)
     int i, j;
     for (i = 0; i < 9; i++) {
         if (i % 3 == 0)
-            printf("--------------------\n");
+            printf("----------------------\n");
         for (j = 0; j < 9; j++) {
             if (j % 3 == 0)
                 printf("|");
             printf("%i ", local[i][j]);
+            if (j == 8)
+                printf("|");
         }
         printf("\n");
     }
+    printf("----------------------\n");
     printf("\n");
 }
 

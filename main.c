@@ -38,20 +38,14 @@ coord find_empty(int map[9][9])
 int valid(int map[9][9], coord pos, int num) //checks if move valid
 {
     int i, j, box_x, box_y;
-
-    //check row
     for (i = 0; i < 9; i++) {
         if (map[pos.x][i] == num && pos.y != i)
             return 0;
     }
-
-    //check col
     for (i = 0; i < 9; i++) {
         if (map[i][pos.y] == num && pos.y != i)
             return 0;
     }
-
-    //check box
     box_x = pos.x/3;
     box_y = pos.y/3;
     for (i = (box_y*3); i < (box_x * 3 + 3); i++) {
@@ -60,8 +54,6 @@ int valid(int map[9][9], coord pos, int num) //checks if move valid
                 return 0;
         }
     }
-
-    //all conditions met: move valid
     return 1;
 }
 
@@ -84,10 +76,11 @@ int solve(int map[9][9])
 
 void printoku(int map[9][9])
 {
-    for (int i = 0; i < 9; i++) {
+    int i, j;
+    for (i = 0; i < 9; i++) {
         if (i % 3 == 0)
             printf("--------------------\n");
-        for (int j = 0; j < 9; j++) {
+        for (j = 0; j < 9; j++) {
             if (j % 3 == 0)
                 printf("|");
             printf("%i ", map[i][j]);

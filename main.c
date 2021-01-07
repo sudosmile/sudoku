@@ -79,7 +79,7 @@ void printoku(map local)
         }
         printf("\n");
     }
-    printf("----------------------\n");
+    printf("--------------------\n");
     printf("\n");
 }
 

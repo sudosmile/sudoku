@@ -1,16 +1,9 @@
-#include <stdio.h>
+#include "main.h"
 
-typedef struct coord {
-    int x;
-    int y;
-    int none;
-}coord;
-
-typedef int map[9][9];
-
-coord find_empty_cell(map local)
+static coord find_empty_cell(map local)
 {
     coord out;
+
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (local[i][j] == 0) {
@@ -25,48 +18,51 @@ coord find_empty_cell(map local)
     return out;
 }
 
-int is_move_valid(map local, coord pos, int num) //checks if move valid
+static int is_move_valid(map local, coord pos, int num) //checks if move valid
 {
     int i, j, box_x, box_y;
+
     for (i = 0; i < 9; i++) {
         if (local[pos.x][i] == num && pos.y != i)
-            return 0;
+            return false;
     }
     for (i = 0; i < 9; i++) {
         if (local[i][pos.y] == num && pos.y != i)
-            return 0;
+            return false;
     }
     box_x = pos.x/3;
     box_y = pos.y/3;
     for (i = (box_y*3); i < (box_x * 3 + 3); i++) {
         for (j = (box_x*3); j < (box_y * 3 + 3); j++) {
             if (local[i][j] == num && (i != pos.x || j != pos.y))
-                return 0;
+                return false;
         }
     }
-    return 1;
+    return true;
 }
 
-int solve_all(map local)
+static int solve_all(map local)
 {
-    coord found = find_empty_cell(local);
     int i;
+    coord found = find_empty_cell(local);
+
     if (!(found.none != 1))
-        return 1;
-    for (i=1; i < 10; i++) {
+        return ERROR;
+    for (i = 1; i < 10; i++) {
         if (is_move_valid(local, found, i)) {
             local[found.x][found.y] = i;
             if (solve_all(local))
-                return 1;
+                return ERROR;
             local[found.x][found.y] = 0;
         }
     }
-    return 0;
+    return SUCCESS;
 }
 
-void printoku(map local)
+static void printoku(map local)
 {
     int i, j;
+
     for (i = 0; i < 9; i++) {
         if (i % 3 == 0)
             printf("----------------------\n");
@@ -83,7 +79,7 @@ void printoku(map local)
     printf("\n");
 }
 
-void test()
+static void test()
 {
     map test_map = {
         {0,0,0,0,3,0,0,4,2},
@@ -103,8 +99,8 @@ void test()
     printoku(test_map);
 }
 
-int main(int arc, char *arv[])
+int main()
 {
     test();
-    return 0;
+    return SUCCESS;
 }
